@@ -1,0 +1,62 @@
+
+FROM debian:trixie-slim
+
+
+# opencode envs
+ENV BUN_RUNTIME_TRANSPILER_CACHE_PATH=0
+#ENV OPENCODE_HOSTNAME=0.0.0.0
+#ENV OPENCODE_HOST=0.0.0.0
+#ENV OPENCODE_PORT=4096
+
+
+# install dependencies 
+#   (utils)
+#   (editors)
+#   gawk gpg - asdf dependencies
+#   sudo - for allow opencode to install packages
+#   git - for opencode to manager repository
+#   libatomic1 - need to nodejs
+RUN apt-get update && apt-get install -y \
+    curl ca-certificates lsb-release wget \
+    nano vim jq \
+    gawk gpg \
+    sudo \
+    git \
+    libatomic1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# create a user opencode with uid/gid 1000, which is what is normally used for users on the host machine.
+RUN groupadd -g 1000 opencode && \
+    useradd -u 1000 -g opencode -m -d /opencode -s /bin/bash opencode
+
+# allow opencode work and mount (as volumes) workspace/projects dirs
+RUN mkdir -p /workspace && chown -R opencode:opencode /workspace
+
+# set default workspace
+WORKDIR /workspace
+
+# allow user 'opencode' run anything in container with sudo
+RUN echo "opencode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/opencode && \
+    chmod 0440 /etc/sudoers.d/opencode
+
+
+RUN curl -fsSL https://github.com/asdf-vm/asdf/releases/download/v0.18.1/asdf-v0.18.1-linux-amd64.tar.gz -o asdf.tar.gz  && \
+    tar zxvf asdf.tar.gz && rm -f tar zxvf asdf.tar.gz && chmod +x asdf && mv asdf /usr/local/bin/ 
+
+
+
+# install opencode and move to bin system
+RUN curl -fsSL https://opencode.ai/install | bash
+RUN mv /root/.opencode/bin/opencode /usr/local/bin/
+
+
+USER opencode
+
+# ASDF_DATA_DIR="/custom/data/dir"
+# PATH="${ASDF_DATA_DIR}/shims:${PATH}"
+ENV PATH="/opencode/.asdf/shims:/opencode/.local/bin:${PATH}"
+
+
+
+# init, by default
+CMD ["opencode"]

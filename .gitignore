@@ -1,0 +1,8 @@
+
+# runnable customizations (copy of opencode-sandbox.sh)
+opencode-sandbox_*.sh
+
+# Dockerfile customizations
+Dockerfile_*
+
+*.log
