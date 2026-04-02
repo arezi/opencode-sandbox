@@ -4,9 +4,15 @@
 
 if [[ "$1" = "help" ]]; then
 
-   # TODO improve doc to this scripts parameters (help, bash, down)
+   # Help message
    echo "opencode sandbox for docker."
-   echo "   scripts parameters (help, bash, down)"
+   echo "Usage: ./opencode-sandbox.sh [command] [args]"
+   echo
+   echo "Commands:"
+   echo "  help    Show this help message."
+   echo "  bash    Start a bash session inside the container."
+   echo "  down    Stop and remove the sandbox container."
+   echo "  (none)  Run the 'opencode' command inside the container (default)."
    echo
 
    exit
@@ -27,7 +33,7 @@ if [[ ! -v OPENCODE_SANDBOX_ALLOWED_DIR ]]; then
 fi
 
 if [[ "$CURRENT_DIR" != "$OPENCODE_SANDBOX_ALLOWED_DIR"* ]]; then
-    echo "❌ Error: opencode must be used just only in '$OPENCODE_SANDBOX_ALLOWED_DIR'"
+    echo "❌ Error: this command must be used just only in '$OPENCODE_SANDBOX_ALLOWED_DIR'"
     exit 1
 fi
 
