@@ -17,7 +17,7 @@ ENV BUN_RUNTIME_TRANSPILER_CACHE_PATH=0
 #   git - for opencode to manager repository
 #   libatomic1 - need to nodejs
 RUN apt-get update && apt-get install -y \
-    curl ca-certificates lsb-release wget \
+    curl ca-certificates lsb-release wget zip unzip \
     nano vim jq \
     gawk gpg \
     sudo \
@@ -43,6 +43,11 @@ RUN echo "opencode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/opencode && \
 RUN curl -fsSL https://github.com/asdf-vm/asdf/releases/download/v0.18.1/asdf-v0.18.1-linux-amd64.tar.gz -o asdf.tar.gz  && \
     tar zxvf asdf.tar.gz && rm -f tar zxvf asdf.tar.gz && chmod +x asdf && mv asdf /usr/local/bin/ 
 
+RUN mkdir -p /asdf && chown -R opencode:opencode /asdf
+
+ENV ASDF_DATA_DIR="/asdf"
+ENV PATH="${ASDF_DATA_DIR}/shims:/opencode/.local/bin:${PATH}"
+
 
 
 # install opencode and move to bin system
@@ -51,10 +56,6 @@ RUN mv /root/.opencode/bin/opencode /usr/local/bin/
 
 
 USER opencode
-
-# ASDF_DATA_DIR="/custom/data/dir"
-# PATH="${ASDF_DATA_DIR}/shims:${PATH}"
-ENV PATH="/opencode/.asdf/shims:/opencode/.local/bin:${PATH}"
 
 
 
