@@ -98,20 +98,32 @@ Using Docker sandboxing ensures:
 
 ---
 
-### Bash Mode
+### Special Parameters
 
-After you have created the alias for the script, you can use special parameters like `bash` to start a bash terminal in your container.
+After you have created the alias for the script, you can use special parameters:
 
+#### Bash Mode
+Start a bash terminal in your container:
 ```bash
 opencode bash
 ```
-
 It can be useful for:
-
 - Installing tools (node, python) with `asdf` or `sudo apt install`
 - Setting up your git (or copying your host .gitconfig to .opencode_sandbox_home/)
 - Manually running a server, or debugging
 - Manual configuration
+
+#### Update
+Update opencode inside the container:
+```bash
+opencode update
+```
+
+#### Down
+Stop and remove the sandbox container:
+```bash
+opencode down
+```
 
 
 ---
@@ -126,6 +138,7 @@ Or inside the container:
 ## example: install nodejs
 asdf plugin add nodejs       # add nodejs plugin
 asdf list all nodejs 24      # list all sub-versions of nodejs 24 
+asdf latest nodejs 24        # get latest version of 24
 asdf install nodejs 24.14.1  # install a specific version
 asdf set nodejs 24.14.1      # set a specific version for the current project
 asdf set -u nodejs 24.14.1   # set a specific version as the default for the user
