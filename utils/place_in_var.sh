@@ -43,7 +43,7 @@ place_in_var() {
 
   if [ ! -e $VAR_DEST ]; then
      echo "  Creating $VAR_DEST ..." 
-     sudo mkdir -p $VAR_DEST
+     mkdir -p $VAR_DEST
   fi
 
   echo "  Linking $VAR_DEST to $ORIGINAL ..."
